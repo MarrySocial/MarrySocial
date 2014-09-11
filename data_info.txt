@@ -1,11 +1,12 @@
 具体访问地址以及输出数据结果说明
-我本地测试地址为  http://192.168.1.100  生产或测试环境需参考实际地址
+我本地测试地址为  http://182.92.215.1  生产或测试环境需参考实际地址
 
 
 个人中心信息
 
 	获得指定id用户信息链接
-		http://192.168.1.100/profile/999
+		http://182.92.215.1/profile/999
+		999为传入uid参数
 	输出结构为
 		Array
 		(
@@ -13,16 +14,16 @@
 		    [message] => done
 		    [data] => stdClass Object
 			(
-			    [uid] => 999
-			    [phone] => 13611221101
-			    [avatar] => 0
-			    [nickname] => 
-			    [realname] => max
-			    [gender] => x
-			    [astro] => 1
-			    [hobby] => 
-			    [lastlogin] => 0
-			    [lastip] => 
+			    [uid] => 999	//系统用户唯一id
+			    [phone] => 13611221101	//用户手机号码
+			    [avatar] => 0	//用户头像id
+			    [nickname] =>	//用户昵称
+			    [realname] => max	//用户真实姓名(非登录名)
+			    [gender] => x	//用户性别 x 未填  1 男  2  女
+			    [astro] => 1	//星座 0 未填 1-12 对应星座
+			    [hobby] =>		//爱好 1 男 0 女  x 未填
+			    [lastlogin] => 0	//最后登录时间
+			    [lastip] =>		//最后登录ip
 			)
 
 		)
@@ -39,12 +40,11 @@
 通讯录（direct）
 
 	添加通讯录信息
-		http://192.168.1.100/direct/add
+		http://182.92.215.1/direct/add
 
 	所需传入数据结构
 
-		post或get 再商定
-		跨域的话应该就只能get了
+		post形式
 
 		fullname：通讯录人名字
 		phone：电话号码尽量不要传来座机
@@ -56,14 +56,14 @@
 			(
 			    [fullname] => apple
 			    [phone] => 1132131331
-			    [uid] => 1
+			    [uid] => 1	//当前登录用户uid
 			)
 
 		    [1] => Array
 			(
 			    [fullname] => orange
 			    [phone] => 133453453453
-			    [uid] => 1
+			    [uid] => 1	//当前登录用户uid
 			)
 
 		)
@@ -73,7 +73,7 @@
 		(
 		    [code] => 200
 		    [message] => done
-		    [data] => 11
+		    [data] => 11	//此次插入数据库数量
 
 		)
 
@@ -84,8 +84,15 @@
 
 二度以上关系通讯录（indirect）
 
+	获得指定用户二度关系最新数量
+		http://182.92.215.1/indirectcount/3213
+
+	实际返回JSON结果
+		{"code":200,"message":"done","data":1}
+
+
 	更新指定用户id间接关系连接。也可作为指定id获取连接
-		http://192.168.1.100/indirect/update/55786
+		http://182.92.215.1/indirect/update/55786
 
 	返回数据实体结构
 		indirectuid：间接关系所对应的注册用户uid（后期聊天指向的依据）
@@ -102,11 +109,11 @@
 			(
 			    [3] => Array
 				(
-				    [indirectuid] => 3
-				    [fromdirect] => jiaold,orange
-				    [fullname] => apple
-				    [directid] => 11
-				    [uid] => 55786
+				    [indirectuid] => 3	//indirect的注册uid
+				    [fromdirect] => jiaold,orange	//聚合当前用户通讯录名称
+				    [fullname] => apple	//indirect全名
+				    [directid] => 11	//一度通讯录id
+				    [uid] => 55786	//所属当前登录用户uid
 				)
 
 			    [4] => Array
@@ -124,6 +131,153 @@
 
 	实际返回JSON结果
 		{"code":200,"message":"done","data":{"3":{"indirectuid":3,"fromdirect":"jiaold,orange","fullname":"apple","directid":11,"uid":55786},"4":{"indirectuid":4,"fromdirect":"apple","fullname":"orange","directid":13,"uid":55786}}}
+
+动态信息
+
+	获得指定用户指定二度关系动态信息（带回复）
+		http://182.92.215.1/topicwithreply/list/1/6,7,8
+		第一个数为手机登陆用户uid
+		第二个串数为手机内静态 indirect uid 逗号分隔
+
+	返回数据
+		Array
+		(
+		    [0] => stdClass Object	//动态的主题
+			(
+			    [tid] => 10	//主题id
+			    [uid] => 3	//发布者uid
+			    [content] => gergejjjjjj	//发布信息内容
+			    [pics] => 3	//包含图片数量
+			    [pics_info] => Array	//图片内容（数字为获取图片aid，到指定地址内获取图片）
+				(
+				    [0] => 575
+				    [1] => 135
+				    [2] => 675
+				)
+			    [likes] => 0 //被赞数量
+			    [replies] => Array	//回复信息（可嵌套多级）格式下方数据有
+				(
+				)
+
+			    [addtime] => 2014-09-06 12:26:09	//发布时间
+			    [fullname] => apple	//发布者名字
+			)
+
+		    [1] => stdClass Object
+			(
+			    [tid] => 9
+			    [uid] => 3
+			    [content] => fdghrtwerwqweqweqweqweqe
+			    [pics] => 0
+			    [pics_info] => Array
+				(
+				)
+			    [likes] => 0
+			    [replies] => Array
+				(
+				)
+
+			    [addtime] => 9
+			    [fullname] => apple
+			)
+
+		    [2] => stdClass Object
+			(
+			    [tid] => 4
+			    [uid] => 4
+			    [content] => oaisdjfjewio
+			    [pics] => 0
+			    [pics_info] => Array
+				(
+				)
+			    [likes] => 0
+			    [replies] => Array
+				(
+				)
+
+			    [addtime] => 4
+			    [fullname] => orange
+			)
+
+		    [3] => stdClass Object
+			(
+			    [tid] => 3
+			    [uid] => 3
+			    [content] => hheheherh
+			    [pics] => 0
+			    [pics_info] => Array
+				(
+				)
+			    [likes] => 0
+			    [replies] => Array
+				(
+				    [0] => stdClass Object
+					(
+					    [rid] => 1	//回复信息id
+					    [tid] => 3	//所属主题id
+					    [rerid] => 0	//回复回复id（0为直接回复主题）
+					    [uid] => 1	//回复者uid
+					    [content] => hhjrerer	//回复内容
+					    [pics] => 0	//回复图片数量
+					    [pics_info] => Array	//回复图片信息（预留暂不用）
+						(
+						)
+					    [likes] => 0	//被赞数
+					    [replies] => Array	//此回复的回复
+						(
+						    [0] => stdClass Object
+							(
+							    [rid] => 4
+							    [tid] => 3
+							    [rerid] => 1
+							    [uid] => 3
+							    [content] => geyhyt
+							    [pics] => 0
+							    [pics_info] => Array
+								(
+								)
+							    [likes] => 0
+							    [replies] => Array
+								(
+								)
+
+							    [addtime] => 0
+							    [fullname] => apple
+							)
+
+						)
+
+					    [addtime] => 2014-09-05 20:56:12	//回复时间
+					    [fullname] => max	//回复者名字
+					)
+
+				)
+
+			    [addtime] => 3
+			    [fullname] => apple
+			)
+
+		    [4] => stdClass Object
+			(
+			    [tid] => 1
+			    [uid] => 1
+			    [content] => gerg
+			    [pics] => 0
+			    [pics_info] => Array
+				(
+				)
+			    [likes] => 0
+			    [replies] => Array
+				(
+				)
+
+			    [addtime] => 1
+			    [fullname] => max
+			)
+
+		)
+	实际返回JSON结果
+		{"code":200,"message":"done","data":[{"tid":10,"uid":3,"content":"gergejjjjjj","pics":0,"pics_info":[],"likes":0,"replies":[],"addtime":10,"fullname":"apple"},{"tid":9,"uid":3,"content":"fdghrtwerwqweqweqweqweqe","pics":0,"pics_info":[],"likes":0,"replies":[],"addtime":9,"fullname":"apple"},{"tid":4,"uid":4,"content":"oaisdjfjewio","pics":0,"pics_info":[],"likes":0,"replies":[],"addtime":4,"fullname":"orange"},{"tid":3,"uid":3,"content":"hheheherh","pics":0,"pics_info":[],"likes":0,"replies":[{"rid":1,"tid":3,"rerid":"0","uid":1,"content":"hhjrerer","pics":0,"pics_info":"","likes":0,"replies":[{"rid":4,"tid":3,"rerid":"1","uid":3,"content":"geyhyt","pics":0,"pics_info":"","likes":0,"replies":[],"addtime":0,"fullname":"apple"}],"addtime":0,"fullname":"max"}],"addtime":3,"fullname":"apple"},{"tid":1,"uid":1,"content":"gerg","pics":0,"pics_info":[],"likes":0,"replies":[],"addtime":1,"fullname":"max"}]}
 
 
 	
