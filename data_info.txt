@@ -37,6 +37,25 @@
 		{"code":200,"message":"done","data":{"uid":999,"phone":"13611221101","avatar":"0","nickname":"","realname":"max","gender":"x","astro":"1","hobby":"","lastlogin":0,"lastip":""}}
 
 
+用户信息头像
+	当用户信息返回 avatar = 1 时候要获取用户头像
+		http://182.92.215.1/profile/avatar/2
+		数字为要获取用户的uid
+	
+	返回实体结构
+		Array(
+		    [code] => 200
+		    [message] => done
+		    [data] => Array(
+		        [uid] => 2
+			[url] => http://abc.def.com/xyz.jpg
+		    )
+		)
+
+	实际返回JSON结果
+		{"code":200,"message":"done","data":"http:\/\/cdn6.hbimg.cn\/store\/snsthumbs\/280_280\/celebrity\/201328\/C02D86CEAF9DD0FBF0B093B10A.png"}
+
+
 通讯录（direct）
 
 	添加通讯录信息
@@ -279,6 +298,19 @@
 	实际返回JSON结果
 		{"code":200,"message":"done","data":[{"tid":10,"uid":3,"content":"gergejjjjjj","pics":0,"pics_info":[],"likes":0,"replies":[],"addtime":10,"fullname":"apple"},{"tid":9,"uid":3,"content":"fdghrtwerwqweqweqweqweqe","pics":0,"pics_info":[],"likes":0,"replies":[],"addtime":9,"fullname":"apple"},{"tid":4,"uid":4,"content":"oaisdjfjewio","pics":0,"pics_info":[],"likes":0,"replies":[],"addtime":4,"fullname":"orange"},{"tid":3,"uid":3,"content":"hheheherh","pics":0,"pics_info":[],"likes":0,"replies":[{"rid":1,"tid":3,"rerid":"0","uid":1,"content":"hhjrerer","pics":0,"pics_info":"","likes":0,"replies":[{"rid":4,"tid":3,"rerid":"1","uid":3,"content":"geyhyt","pics":0,"pics_info":"","likes":0,"replies":[],"addtime":0,"fullname":"apple"}],"addtime":0,"fullname":"max"}],"addtime":3,"fullname":"apple"},{"tid":1,"uid":1,"content":"gerg","pics":0,"pics_info":[],"likes":0,"replies":[],"addtime":1,"fullname":"max"}]}
 
+
+服务器时间
+	以秒为单位的时间戳
+		http://182.92.215.1/timestamp
+
+	返回结果结构
+		Array(
+		    [datetime] => 1411266595
+		)
+
+
+	实际返回JSON结果
+		{"datetime":1411266595}
 
 	
 	目前参考返回状态，后续再完善
